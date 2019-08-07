@@ -1,0 +1,3 @@
+# Restore APIM
+Restore-AzureRmApiManagement -ResourceGroupName 'enter the resource group where the APIM resides' -Name 'enter the APIM name' 
+-StorageContext $destinationContext -SourceContainerName $DestinationContainerName -SourceBlobName $blobname
