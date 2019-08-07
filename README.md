@@ -25,9 +25,8 @@ try
         -ServicePrincipal `
         -TenantId $servicePrincipalConnection.TenantId `
         -ApplicationId $servicePrincipalConnection.ApplicationId `
-        -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint 
-		
-}
+        -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint 	
+	}
 catch {
     if (!$servicePrincipalConnection)
     {
