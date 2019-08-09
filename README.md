@@ -77,7 +77,7 @@ Backup-AzureRmApiManagement -ResourceGroupName 'apim resource group'	-Name 'apin
 Restore-AzureRmApiManagement -ResourceGroupName 'Enter the Apim resource group' -Name 'Enter the APIM name' -StorageContext $destinationContext -SourceContainerName $DestinationContainerName -SourceBlobName $blobname
 
 
-Steps Summary 
+# Steps Summary 
 
 •	Create Storage Accounts in both subscription for taking backup and restore of APIM
 •	Backup APIM in the source storage Account
