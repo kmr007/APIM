@@ -1,5 +1,4 @@
-# Automating Azure API management backup using powershell script
-Automating the backup of Azure APIM using Azure powershell
+# Automating Azure API management backup and Restore using powershell script and Automation Account
 
 # Pre-Requisites 
 •	Azure PowerShell
@@ -12,6 +11,11 @@ Automating the backup of Azure APIM using Azure powershell
 Create a storage Account for storing the backup file of APIM.
 
 # Step 2
+
+Create an Automation Account for Automating the powershell script.
+
+# Step 3
+
 Execute the below powershell script for automating the APIM backup using Azure Automation Account
 
 $connectionName = "AzureRunAsConnection"
@@ -37,7 +41,7 @@ catch {
         throw $_.Exception
     }
 }
-Select-AzureRmSubscription “Subscription ID where the APIM resides”
+Select-AzureRmSubscription “Subscription ID where the  APIM resides”
 # Select the APIM instance to backup
 $destinationApim = Get-AzureRmApiManagement | Where-Object {$_.Name -eq "APIM resource group name"}
 $sourceApim = Get-AzureRmApiManagement | Where-Object {$_.Name -eq "APIM name"}
@@ -52,11 +56,31 @@ $containername="apibackup"
 $blobname="myapimservice$todaysdate.apimbackup"
 Backup-AzureRmApiManagement -ResourceGroupName 'apim resource group'	-Name 'apiname' -StorageContext $StorageContext1 -TargetContainerName $containername -TargetBlobName $blobname
 
-# Steps Summary
-•	Create Storage Account for taking backup
-•	Backup APIM into storage Account using powershell script
+# Copying APIM backup from source Storage Account to Destination Storage Account
+ $SourceStorageAccountName = "apimapi"
+ $sourceStorageAccountKey = "enter the  source storage account access key/SAS"
+ $SourceContainerName = "apibackup"
+ $DestinationStorageAccountName = "apiapi"
+ $destinationStorageAccountKey = "enter the destination account access key /SAS"
+ $DestinationContainerName = "test"
+ $sourceContext = New-AzureStorageContext -StorageAccountName $SourceStorageAccountName -StorageAccountKey $sourceStorageAccountKey
+ $destinationContext = New-AzureStorageContext -StorageAccountName $DestinationStorageAccountName -StorageAccountKey $destinationStorageAccountKey 
+ $blobs = Get-AzureStorageBlob -Context $sourceContext -Container $SourceContainerName
+  
+# Asks for confirmation for every blob that already exists in the destination container
+  $blobs | Start-AzureStorageBlobCopy -Context $sourceContext -DestContext $destinationContext -DestContainer $DestinationContainerName
+
+#Select the Destination subscription 
+  Select-AzureRmSubscription ‘Destination subscription ID’
+
+#Restore APIM
+Restore-AzureRmApiManagement -ResourceGroupName 'Enter the Apim resource group' -Name 'Enter the APIM name' -StorageContext $destinationContext -SourceContainerName $DestinationContainerName -SourceBlobName $blobname
 
 
+Steps Summary 
 
-
-
+•	Create Storage Accounts in both subscription for taking backup and restore of APIM
+•	Backup APIM in the source storage Account
+•	Copy APIM backup data across the subscription.
+•	Restore APIM from the backup file which is in the Destination storage Account.
+•	Automate the entire script using the Azure automation account runbook.
