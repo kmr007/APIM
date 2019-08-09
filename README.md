@@ -1,4 +1,4 @@
-# Automating Azure API management using powershell script
+# Automating Azure API management backup using powershell script
 Automating the backup of Azure APIM using Azure powershell
 
 # Pre-Requisites 
