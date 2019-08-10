@@ -84,3 +84,7 @@ Steps Summary
 •	Copy APIM backup data across the subscription.
 •	Restore APIM from the backup file which is in the Destination storage Account.
 •	Automate the entire script using the Azure automation account runbook.
+
+Benefits of this solution
+
+Using this solutions changes in the primary APIM can be replicated to DR region apim automatically.
